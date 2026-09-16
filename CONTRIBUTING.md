@@ -29,8 +29,11 @@ Contém a configuração da aplicação e da base de dados.
 
 - `env.php`: carrega as variáveis do ficheiro `.env`.
 - `database.php`: cria e fornece a ligação PDO.
+- `PdoConnection.php`: implementa o contrato de fornecimento da ligação PDO.
 
 Não colocar regras de negócio nesta pasta.
+
+Os Repositories devem receber `PdoConnectionInterface` por injeção. Não criar `new PDO` dentro de um Repository, Service ou Controller. A implementação concreta fica centralizada em `PdoConnection`.
 
 ### `database/`
 
@@ -55,8 +58,29 @@ Contém componentes comuns da aplicação, como:
 - `Request`: leitura do método, caminho, headers e body.
 - `Response`: criação e envio de respostas JSON.
 - `Router`: registo e encaminhamento das rotas.
+- `Container`: ponto único de fornecimento de Controllers, Services e outras dependências.
 
 Alterações nesta pasta podem afetar toda a API e devem ser feitas com cuidado.
+
+## Container de dependências
+
+O `Container` implementa `ContainerInterface` e deve ser o ponto único para obter Controllers e Services. Ele resolve automaticamente as dependências tipadas dos construtores.
+
+No `index.php`, o container é criado uma vez e recebe os bindings das interfaces:
+
+```php
+$container = new Container();
+$container->bind(PdoConnectionInterface::class, PdoConnection::class);
+```
+
+Para obter qualquer classe:
+
+```php
+$imovelController = $container->get(ImovelController::class);
+$imovelService = $container->get(ImovelService::class);
+```
+
+Não usar `new Controller`, `new Service`, `new Repository` ou `new PDO` nas rotas. Quando uma classe nova tiver dependências, declare-as no construtor e deixe o container resolvê-las. Interfaces devem ser registadas com `bind()`.
 
 ### `src/Controllers/`
 
@@ -93,6 +117,15 @@ Responsabilidades:
 - Isolar a aplicação dos detalhes da base de dados.
 
 Repositories não devem decidir se uma operação é permitida pelo negócio. Essa decisão pertence aos Services.
+
+Exemplo de construção:
+
+```php
+$pdoProvider = new PdoConnection();
+$imovelRepository = new ImovelRepository($pdoProvider);
+```
+
+Para testes, pode ser criada outra implementação de `PdoConnectionInterface` sem alterar os Repositories.
 
 ### `src/Services/`
 

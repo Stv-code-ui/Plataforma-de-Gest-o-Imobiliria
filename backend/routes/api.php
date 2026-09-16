@@ -2,23 +2,25 @@
 
 declare(strict_types=1);
 
-require_once dirname(__DIR__) . '/src/Core/Router.php';
-require_once dirname(__DIR__) . '/src/Core/Request.php';
-require_once dirname(__DIR__) . '/src/Core/Response.php';
-require_once dirname(__DIR__) . '/src/Repositories/AuthRepository.php';
-require_once dirname(__DIR__) . '/src/Services/AuthService.php';
-require_once dirname(__DIR__) . '/src/Controllers/AuthController.php';
-require_once dirname(__DIR__) . '/src/Middlewares/AuthMiddleware.php';
+require_once dirname(__DIR__) . '/src/Core/Contracts/ContainerInterface.php';
 
-function registerApiRoutes(Router $router, AuthController $authController): void
+function registerApiRoutes(Router $router, ContainerInterface $container): void
 {
-    $router->add('POST', '/api/auth/register', [$authController, 'register']);
-    $router->add('POST', '/api/auth/login', [$authController, 'login']);
+    $testController = $container->get(TestController::class);
 
-    $authMiddleware = new AuthMiddleware(
-        new AuthService(new AuthRepository(databaseConnection()))
-    );
-    $router->add('GET', '/api/auth/me', function (Request $request) use ($authMiddleware, $authController): Response {
+    $router->add('GET', '/api/test', [$testController, 'status']);
+    $router->add('POST', '/api/auth/register', function (Request $request) use ($container): Response {
+        return $container->get(AuthController::class)->register($request);
+    });
+    
+    $router->add('POST', '/api/auth/login', function (Request $request) use ($container): Response {
+        return $container->get(AuthController::class)->login($request);
+    });
+
+    $router->add('GET', '/api/auth/me', function (Request $request) use ($container): Response {
+        $authMiddleware = $container->get(AuthMiddleware::class);
+        $authController = $container->get(AuthController::class);
+
         return $authMiddleware->handle(
             $request,
             fn (Request $request, array $auth): Response => $authController->me($request, $auth)

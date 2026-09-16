@@ -3,14 +3,12 @@
 declare(strict_types=1);
 
 require_once dirname(__DIR__) . '/config/env.php';
+require_once dirname(__DIR__) . '/config/autoload.php';
 require_once dirname(__DIR__) . '/config/database.php';
+require_once dirname(__DIR__) . '/src/Core/Container.php';
 require_once dirname(__DIR__) . '/src/Core/Request.php';
 require_once dirname(__DIR__) . '/src/Core/Response.php';
 require_once dirname(__DIR__) . '/src/Core/Router.php';
-require_once dirname(__DIR__) . '/src/Repositories/AuthRepository.php';
-require_once dirname(__DIR__) . '/src/Services/AuthService.php';
-require_once dirname(__DIR__) . '/src/Controllers/AuthController.php';
-require_once dirname(__DIR__) . '/src/Middlewares/AuthMiddleware.php';
 require_once dirname(__DIR__) . '/routes/api.php';
 
 header('Access-Control-Allow-Origin: ' . (string) env('CORS_ORIGIN', '*'));
@@ -25,8 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $request = Request::capture();
 $router = new Router();
+$container = new Container();
+$container->bind(PdoConnectionInterface::class, PdoConnection::class);
 
-registerApiRoutes($router, new AuthController(new AuthService(new AuthRepository(databaseConnection()))));
+registerApiRoutes($router, $container);
 
 try {
 	$router->dispatch($request)->send();
@@ -34,6 +34,5 @@ try {
 	if ((bool) env('APP_DEBUG', false)) {
 		Response::json(['error' => $exception->getMessage()], 500)->send();
 	}
-
 	Response::json(['error' => 'Erro interno do servidor'], 500)->send();
 }

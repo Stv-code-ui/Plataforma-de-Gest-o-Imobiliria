@@ -3,11 +3,15 @@
 declare(strict_types=1);
 
 require_once dirname(__DIR__) . '/Models/Utilizador.php';
+require_once dirname(__DIR__) . '/Core/Contracts/PdoConnectionInterface.php';
 
 class AuthRepository
 {
-    public function __construct(private readonly PDO $connection)
+    private readonly PDO $connection;
+
+    public function __construct(PdoConnectionInterface $provider)
     {
+        $this->connection = $provider->getConnection();
     }
 
     public function findByEmail(string $email): ?array

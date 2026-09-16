@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__) . '/Core/Request.php';
 require_once dirname(__DIR__) . '/Core/Response.php';
+require_once dirname(__DIR__) . '/Services/UtilizadorService.php';
 
 class UtilizadorController
 {
+	public function __construct(private readonly UtilizadorService $service)
+	{
+	}
+
 	public function index(Request $request): Response
 	{
 		return $this->notImplemented();
