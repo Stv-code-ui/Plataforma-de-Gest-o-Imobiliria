@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Ligacao PDO a base de dados
- * Responsavel: Pessoa 1
- */
-
 require_once __DIR__ . '/env.php';
 
 function databaseConnection(): PDO

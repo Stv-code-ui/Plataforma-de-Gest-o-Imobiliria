@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Encapsula o pedido HTTP
- * Responsavel: Pessoa 1
- */
-
 class Request
 {
 	private array $body;

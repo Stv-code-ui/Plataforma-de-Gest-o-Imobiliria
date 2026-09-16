@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Entidade Favorito.
- */
 class Favorito
 {
     public int $utilizadorId;

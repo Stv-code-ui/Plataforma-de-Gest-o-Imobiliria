@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Middleware de autenticacao
- * Responsavel: Pessoa 1
- */
-
 require_once dirname(__DIR__) . '/Core/Request.php';
 require_once dirname(__DIR__) . '/Core/Response.php';
 require_once dirname(__DIR__) . '/Services/AuthService.php';

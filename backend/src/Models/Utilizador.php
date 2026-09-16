@@ -2,10 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Entidade Utilizador
- * Responsavel: Pessoa 3
- */
 class Utilizador
 {
 	public ?int $id;

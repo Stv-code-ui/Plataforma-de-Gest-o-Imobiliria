@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Variaveis de ambiente
- * Responsavel: Pessoa 1
- */
-
 function loadEnv(string $path): void
 {
 	if (!is_file($path)) {

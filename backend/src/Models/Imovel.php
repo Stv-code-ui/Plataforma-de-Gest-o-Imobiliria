@@ -2,10 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Entidade Imovel
- * Responsavel: Pessoa 3
- */
 class Imovel
 {
 	public ?int $id;

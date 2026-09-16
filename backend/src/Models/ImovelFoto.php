@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Entidade ImovelFoto.
- */
 class ImovelFoto
 {
     public ?int $id;

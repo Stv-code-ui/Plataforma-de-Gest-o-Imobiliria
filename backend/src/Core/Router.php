@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Router simples (dispatch de rotas)
- * Responsavel: Pessoa 1
- */
-
 class Router
 {
 	private array $routes = [];

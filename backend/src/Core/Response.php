@@ -2,11 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Encapsula a resposta JSON
- * Responsavel: Pessoa 1
- */
-
 class Response
 {
 	public function __construct(

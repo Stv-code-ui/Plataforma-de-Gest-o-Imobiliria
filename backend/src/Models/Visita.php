@@ -2,10 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Entidade Visita
- * Responsavel: Pessoa 3
- */
 class Visita
 {
 	public ?int $id;
