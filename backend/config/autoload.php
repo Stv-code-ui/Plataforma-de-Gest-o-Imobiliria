@@ -13,6 +13,7 @@ spl_autoload_register(static function (string $class): void {
 		$root . '/src/Models',
 		$root . '/src/Repositories',
 		$root . '/src/Services',
+		$root . '/src/Utils',
 	];
 
 	foreach ($directories as $directory) {

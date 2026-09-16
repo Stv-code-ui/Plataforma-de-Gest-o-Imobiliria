@@ -59,6 +59,8 @@ Contém componentes comuns da aplicação, como:
 - `Response`: criação e envio de respostas JSON.
 - `Router`: registo e encaminhamento das rotas.
 - `Container`: ponto único de fornecimento de Controllers, Services e outras dependências.
+- `Utils`: utilitários reutilizáveis, como manipulação de ficheiros.
+- `storage/store`: diretório padrão para ficheiros criados pela aplicação.
 
 Alterações nesta pasta podem afetar toda a API e devem ser feitas com cuidado.
 
@@ -81,6 +83,49 @@ $imovelService = $container->get(ImovelService::class);
 ```
 
 Não usar `new Controller`, `new Service`, `new Repository` ou `new PDO` nas rotas. Quando uma classe nova tiver dependências, declare-as no construtor e deixe o container resolvê-las. Interfaces devem ser registadas com `bind()`.
+
+## Utilitários
+
+Os utilitários ficam em `backend/src/Utils/` e são carregados automaticamente por `config/autoload.php`. Não fazer `require_once` dentro de Controllers, Services ou Repositories para usar um utilitário.
+
+Exemplo:
+
+```php
+FileUtility::write($path, $content);
+$content = FileUtility::read($path);
+$files = FileUtility::list($directory, 'jpg');
+FileUtility::delete($path);
+```
+
+`FileUtility` contém apenas operações genéricas de ficheiros e diretórios. Regras sobre o destino, nome ou permissão de um ficheiro pertencem ao Service responsável pelo caso de uso.
+
+Quando o caminho passado for relativo, `FileUtility` usa automaticamente `backend/storage/store`:
+
+```php
+FileUtility::write('uploads/avatar.txt', $content);
+$content = FileUtility::read('uploads/avatar.txt');
+```
+
+Caminhos absolutos continuam disponíveis quando for necessário trabalhar fora do store padrão.
+
+### Sessões, cookies e autenticação
+
+Os utilitários seguintes também são carregados automaticamente:
+
+```php
+SessionUtility::put('key', $value);
+$value = SessionUtility::get('key');
+
+CookieUtility::set('theme', 'dark');
+$theme = CookieUtility::get('theme');
+
+AuthUtility::login($user);
+$user = AuthUtility::user();
+$authenticated = AuthUtility::check();
+AuthUtility::logout();
+```
+
+O `AuthUtility` também centraliza `hashPassword()` e `verifyPassword()`. O autoload é iniciado pelo `public/index.php`, por isso as classes podem ser chamadas em Controllers, Services e Repositories sem novo `require_once`.
 
 ### `src/Controllers/`
 

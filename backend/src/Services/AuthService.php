@@ -38,7 +38,7 @@ class AuthService
         $user = new Utilizador(
             $name,
             $email,
-            password_hash($password, PASSWORD_DEFAULT),
+            AuthUtility::hashPassword($password),
             $phone === '' ? null : $phone,
             $type
         );
@@ -56,7 +56,7 @@ class AuthService
         $password = (string) ($input['senha'] ?? '');
         $user = $this->repository->findByEmail($email);
 
-        if ($user === null || !password_verify($password, (string) $user['senha'])) {
+        if ($user === null || !AuthUtility::verifyPassword($password, (string) $user['senha'])) {
             throw new DomainException('Credenciais invalidas');
         }
 
