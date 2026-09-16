@@ -36,5 +36,15 @@ loadEnv(dirname(__DIR__) . DIRECTORY_SEPARATOR . '.env');
 function env(string $key, mixed $default = null): mixed
 {
 	$value = getenv($key);
-	return $value === false ? $default : $value;
+
+	if ($value === false) {
+		return $default;
+	}
+
+	return match (strtolower($value)) {
+		'true' => true,
+		'false' => false,
+		'null' => null,
+		default => $value,
+	};
 }
