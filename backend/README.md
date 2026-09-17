@@ -1,4 +1,24 @@
 # Plataforma de Gestão Imobiliária
+
+## Views HTML
+
+As views ficam em `views/` e podem ser devolvidas pelos controllers sem misturar HTML com a lógica de negócio:
+
+```php
+return Response::view('imoveis.index', [
+	'imoveis' => $imoveis,
+]);
+```
+
+O nome usa pontos ou barras para os subdiretórios, por exemplo `imoveis.index` corresponde a `views/imoveis/index.php`. As views suportam PHP normal e estas diretivas:
+
+- `{{ $valor }}`: imprime com escape HTML;
+- `{!! $html !!}`: imprime HTML sem escape, apenas para conteúdo confiável;
+- `@extends('layouts.app')`, `@section('nome')` e `@yield('nome')`: layouts;
+- `@include('partials.header')`: partials;
+- `@if`, `@elseif`, `@else`, `@endif`, `@foreach` e `@endforeach`.
+
+Os templates compilados são armazenados em `storage/views/` e regenerados quando a view original muda. A rota `GET /` demonstra o uso em `routes/web.php`; as rotas `/api/*` continuam a responder JSON.
 Plataforma web de gestão imobiliária que liga proprietários e interessados directamente, reduzindo a dependência de intermediários no arrendamento em Angola. Inclui mensagens integradas, anúncios verificados, disponibilidade em tempo real, agendamento de visitas e filtros inteligentes por localização, preço e tipologia.
 
 # Plataforma de Gestão Imobiliária

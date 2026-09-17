@@ -12,9 +12,13 @@ function registerApiRoutes(Router $router, ContainerInterface $container): void
     $router->add('POST', '/api/auth/register', function (Request $request) use ($container): Response {
         return $container->get(AuthController::class)->register($request);
     });
-    
+
     $router->add('POST', '/api/auth/login', function (Request $request) use ($container): Response {
         return $container->get(AuthController::class)->login($request);
+    });
+
+    $router->add('GET', '/api/test', function(Request $request) use ($container): Response{
+        return Response::json(['data'=>'Ola Mundo']);
     });
 
     $router->add('GET', '/api/auth/me', function (Request $request) use ($container): Response {
